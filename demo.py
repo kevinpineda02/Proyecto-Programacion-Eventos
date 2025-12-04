@@ -43,6 +43,7 @@ def main():
     event_bus.subscribe("employee.terminated", notification_handler.handle)
     event_bus.subscribe("employee.terminated", audit_handler.handle)
     event_bus.subscribe("employee.terminated", capacity_handler.handle)
+    event_bus.subscribe("employee.terminated", payroll_handler.handle)
     
     event_bus.subscribe("employee.promoted", notification_handler.handle)
     event_bus.subscribe("employee.promoted", audit_handler.handle)

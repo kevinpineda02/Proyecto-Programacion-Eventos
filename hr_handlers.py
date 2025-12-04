@@ -38,7 +38,8 @@ class NotificationHandler(EventHandler):
             return f"{data['employee_name']} se ha trasladado de {data['old_department']} a {data['new_department']}"
         
         elif event_type == "employee.salary_adjusted":
-            return f"Ajuste salarial para {data['employee_name']}: ${data['old_salary']:,.2f} → ${data['new_salary']:,.2f} ({data['increase_percentage']:.1f}%)"
+            change_type = "aumento" if data['change_amount'] > 0 else "reducción"
+            return f"Ajuste salarial para {data['employee_name']}: ${data['old_salary']:,.2f} → ${data['new_salary']:,.2f} ({change_type} del {abs(data['change_percentage']):.1f}%)"
         
         elif event_type == "department.created":
             return f"Nuevo departamento creado: {data['department_name']} (Presupuesto: ${data['budget']:,.2f})"
@@ -125,12 +126,11 @@ class PayrollHandler(EventHandler):
             print(f"  💰 Nómina: +${data['salary']:,.2f}. Total: ${self.total_payroll:,.2f}")
         
         elif event_type == "employee.terminated":
-            # Asumimos que el salario viene en los datos
-            if 'salary' in data:
-                self.total_payroll -= data['salary']
-                print(f"  💰 Nómina: -${data['salary']:,.2f}. Total: ${self.total_payroll:,.2f}")
+            self.total_payroll -= data['salary']
+            print(f"  💰 Nómina: -${data['salary']:,.2f}. Total: ${self.total_payroll:,.2f}")
         
         elif event_type == "employee.salary_adjusted":
-            increase = data['increase_amount']
-            self.total_payroll += increase
-            print(f"  💰 Nómina: Ajuste de ${increase:,.2f}. Total: ${self.total_payroll:,.2f}")
+            change = data['change_amount']
+            self.total_payroll += change
+            change_sign = "+" if change >= 0 else ""
+            print(f"  💰 Nómina: {change_sign}${change:,.2f}. Total: ${self.total_payroll:,.2f}")

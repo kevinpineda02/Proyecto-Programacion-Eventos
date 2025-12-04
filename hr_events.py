@@ -36,6 +36,7 @@ class EmployeeTerminatedEvent(Event):
                 "employee_name": employee.full_name,
                 "position": employee.position.title,
                 "department": employee.department.name,
+                "salary": employee.salary,
                 "reason": reason
             }
         )
@@ -85,6 +86,10 @@ class SalaryAdjustedEvent(Event):
     """Evento: El salario de un empleado ha sido ajustado"""
     
     def __init__(self, employee: Employee, old_salary: float, new_salary: float, reason: str = ""):
+        change_amount = new_salary - old_salary
+        # Evitar división por cero
+        change_percentage = ((new_salary - old_salary) / old_salary) * 100 if old_salary != 0 else 0
+        
         super().__init__(
             event_type="employee.salary_adjusted",
             data={
@@ -92,8 +97,8 @@ class SalaryAdjustedEvent(Event):
                 "employee_name": employee.full_name,
                 "old_salary": old_salary,
                 "new_salary": new_salary,
-                "increase_amount": new_salary - old_salary,
-                "increase_percentage": ((new_salary - old_salary) / old_salary) * 100,
+                "change_amount": change_amount,
+                "change_percentage": change_percentage,
                 "reason": reason
             }
         )
