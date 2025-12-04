@@ -38,8 +38,14 @@ class NotificationHandler(EventHandler):
             return f"{data['employee_name']} se ha trasladado de {data['old_department']} a {data['new_department']}"
         
         elif event_type == "employee.salary_adjusted":
-            change_type = "aumento" if data['change_amount'] > 0 else "reducción"
-            return f"Ajuste salarial para {data['employee_name']}: ${data['old_salary']:,.2f} → ${data['new_salary']:,.2f} ({change_type} del {abs(data['change_percentage']):.1f}%)"
+            change_amount = data['change_amount']
+            if change_amount > 0:
+                change_type = "aumento"
+            elif change_amount < 0:
+                change_type = "reducción"
+            else:
+                change_type = "sin cambio"
+            return f"Ajuste salarial para {data['employee_name']}: ${data['old_salary']:,.2f} → ${data['new_salary']:,.2f} ({change_type} del {data['change_percentage']:.1f}%)"
         
         elif event_type == "department.created":
             return f"Nuevo departamento creado: {data['department_name']} (Presupuesto: ${data['budget']:,.2f})"

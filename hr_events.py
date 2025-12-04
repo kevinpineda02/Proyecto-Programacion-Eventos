@@ -87,8 +87,12 @@ class SalaryAdjustedEvent(Event):
     
     def __init__(self, employee: Employee, old_salary: float, new_salary: float, reason: str = ""):
         change_amount = new_salary - old_salary
-        # Evitar división por cero
-        change_percentage = ((new_salary - old_salary) / old_salary) * 100 if old_salary != 0 else 0
+        
+        # Evitar división por cero al calcular porcentaje
+        if old_salary != 0:
+            change_percentage = (change_amount / old_salary) * 100
+        else:
+            change_percentage = 0
         
         super().__init__(
             event_type="employee.salary_adjusted",
