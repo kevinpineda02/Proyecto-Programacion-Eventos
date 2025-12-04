@@ -1,0 +1,7 @@
+# Este proyecto solo requiere Python 3.7+
+# No hay dependencias externas necesarias
+
+# Para desarrollo (opcional):
+# pylint>=2.0.0
+# black>=22.0.0
+# pytest>=7.0.0
